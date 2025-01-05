@@ -21,7 +21,11 @@ namespace Cars_Test.Controllers
             try
             {
                 var employees = _employeeService.GetAll();
-                return employees == null ? throw new ApplicationException("Error getting fetch employees") : Ok(employees);
+                return employees == null ? NotFound("Error getting fetch employees") : Ok(employees);
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -35,7 +39,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var employee = await _employeeService.GetByIdAsync(id);
-                return employee == null ? throw new ApplicationException("Error getting fetch employee") : Ok(employee);
+                return employee == null ? NotFound("Error getting fetch employee") : Ok(employee);
             }
             catch (Exception)
             {
@@ -49,7 +53,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var addedEmployee = await _employeeService.AddAsync(addEmployeeDTO);
-                return addedEmployee == null ? throw new ApplicationException("Error added employee to database") : Ok(addedEmployee);
+                return addedEmployee == null ? NotFound("Error added employee to database") : Ok(addedEmployee);
             }
             catch (Exception)
             {
@@ -63,7 +67,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var employee = await _employeeService.AddVehicleAnEmployee(addVehicleDTO);
-                return employee == null ? throw new ApplicationException("Error added vehicle for employee to database") : Ok(employee);
+                return employee == null ? NotFound("Error added vehicle for employee to database") : Ok(employee);
             }
             catch (Exception)
             {
@@ -77,7 +81,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var updatedEmployee = await _employeeService.UpdateAsync(updateEmployeeDTO);
-                return updatedEmployee == null ? throw new ApplicationException("Error updated employee in the database") : Ok(updatedEmployee);
+                return updatedEmployee == null ? NotFound("Error updated employee in the database") : Ok(updatedEmployee);
             }
             catch (Exception)
             {
@@ -91,7 +95,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var deletedEmployee = await _employeeService.DeleteAsync(id);
-                return deletedEmployee == null ? throw new ApplicationException("Error delete employee in the database") : Ok(deletedEmployee);
+                return deletedEmployee == null ? NotFound("Error delete employee in the database") : Ok(deletedEmployee);
             }
             catch (Exception)
             {

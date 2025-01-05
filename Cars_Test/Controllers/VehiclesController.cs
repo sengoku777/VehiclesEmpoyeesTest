@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Cars_Test.DTO.Vehicle;
+﻿using Cars_Test.DTO.Vehicle;
 using Cars_Test.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,7 +35,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var vehicles = _vehicleService.GetAll();
-                return vehicles == null ? throw new ApplicationException("Error get vehicles in the database") : Ok(vehicles);
+                return vehicles == null ? NotFound("Error get vehicles in the database") : Ok(vehicles);
             }
             catch (Exception)
             {
@@ -50,7 +49,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var vehicle = await _vehicleService.GetByIdAsync(id); 
-                return vehicle == null ? throw new ApplicationException("Error getting vehicle in the database") : Ok(vehicle);
+                return vehicle == null ? NotFound("Error getting vehicle in the database") : Ok(vehicle);
             }
             catch (Exception)
             {
@@ -64,7 +63,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var vehicle = await _vehicleService.AddAsync(createVehicleDto);
-                return vehicle == null ? throw new ApplicationException("Error added vehicle in the database") : Ok(vehicle);
+                return vehicle == null ? NotFound("Error added vehicle in the database") : Ok(vehicle);
             }
             catch (Exception)
             {
@@ -78,7 +77,7 @@ namespace Cars_Test.Controllers
             try
             {
                 var vehicle = await _vehicleService.UpdateAsync(updateVehicleDto);
-                return vehicle == null ? throw new ApplicationException("Error updating vehicle in the database") : Ok(vehicle);
+                return vehicle == null ? NotFound("Error updating vehicle in the database") : Ok(vehicle);
             }
             catch (Exception)
             {
