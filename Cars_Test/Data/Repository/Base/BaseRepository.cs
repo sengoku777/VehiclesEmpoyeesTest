@@ -47,12 +47,12 @@ namespace Cars_Test.Data.Repository.Base
             }
         }
 
-        public TEntity Add(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
             try
             {
                 var result = Collection.Add(entity);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return result.Entity;
             }
             catch (NullReferenceException e)
@@ -62,12 +62,12 @@ namespace Cars_Test.Data.Repository.Base
             }
         }
 
-        public virtual void AddRange(IEnumerable<TEntity> entity)
+        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entity)
         {
             try
             {
                 Collection.AddRange(entity);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception e)
             {
@@ -76,12 +76,12 @@ namespace Cars_Test.Data.Repository.Base
             }
         }
 
-        public virtual TEntity Update(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             try
             {
                 entity = Collection.Update(entity).Entity;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return entity;
             }
             catch (Exception e)
@@ -91,13 +91,13 @@ namespace Cars_Test.Data.Repository.Base
             }
         }
 
-        public virtual void Delete(Func<TEntity, bool> predicator)
+        public virtual async Task DeleteAsync(Func<TEntity, bool> predicator)
         {
             try
             {
                 var entities = Find(predicator);
                 Collection.RemoveRange(entities);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception e)
             {

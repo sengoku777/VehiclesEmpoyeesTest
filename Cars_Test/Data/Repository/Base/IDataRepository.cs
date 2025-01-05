@@ -9,17 +9,17 @@ namespace Cars_Test.Data.Repository.Base
 
         TEntity Get(Func<TEntity, bool> expression);
 
-        TEntity Add(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity);
 
-        void AddRange(IEnumerable<TEntity> entities);
+        Task AddRangeAsync(IEnumerable<TEntity> entities);
 
         IEnumerable<TEntity> Find(Func<TEntity, bool> expression);
 
         IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression);
 
-        TEntity Update(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
 
-        void Delete(Func<TEntity, bool> expression);
+        Task DeleteAsync(Func<TEntity, bool> expression);
 
         DbSet<TEntity> Collection { get; }
     }

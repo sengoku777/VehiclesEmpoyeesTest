@@ -19,16 +19,16 @@ namespace Cars_Test.Controllers
         }
 
         [HttpGet("checkNumberPlate/{numberPlate}/employee/{employeeId}")]
-        public IActionResult CheckNumberPlate(string numberPlate, int employeeId)
+        public async Task<IActionResult> CheckNumberPlate(string numberPlate, int employeeId)
         {
             try
             {
-                var isValidateNumberplate = _vehicleService.CheckNumberPlate(numberPlate, employeeId);
+                var isValidateNumberplate = await _vehicleService.CheckNumberPlateAsync(numberPlate, employeeId);
                 return Ok(isValidateNumberplate);
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error check number plate");
             }
         }
 
@@ -38,11 +38,11 @@ namespace Cars_Test.Controllers
             try
             {
                 var vehicles = _vehicleService.GetAll();
-                return vehicles == null ? throw new ApplicationException("Error delete vehicles in the database") : Ok(vehicles);
+                return vehicles == null ? throw new ApplicationException("Error get vehicles in the database") : Ok(vehicles);
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error on the get collection vehicle");
             }
         }
 
@@ -56,49 +56,49 @@ namespace Cars_Test.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Erorr on the getting vehicle");
             }
         }
 
         [HttpPost]
-        public IActionResult AddVehicle([FromBody] AddVehicleDTO createVehicleDto)
+        public async Task<IActionResult> AddVehicle([FromBody] AddVehicleDTO createVehicleDto)
         {
             try
             {
-                var vehicle = _vehicleService.Add(createVehicleDto);
+                var vehicle = await _vehicleService.AddAsync(createVehicleDto);
                 return vehicle == null ? throw new ApplicationException("Error added vehicle in the database") : Ok(vehicle);
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Erorr on the adding vehicle");
             }
         }
 
         [HttpPut]
-        public IActionResult UpdateVehicle([FromBody] UpdateVehicleDTO updateVehicleDto)
+        public async Task<IActionResult> UpdateVehicle([FromBody] UpdateVehicleDTO updateVehicleDto)
         {
             try
             {
-                var vehicle = _vehicleService.Update(updateVehicleDto);
+                var vehicle = await _vehicleService.UpdateAsync(updateVehicleDto);
                 return vehicle == null ? throw new ApplicationException("Error updating vehicle in the database") : Ok(vehicle);
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Erorr on the updating vehicle");
             }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteVehicle(int id)
+        public async Task<IActionResult> DeleteVehicle(int id)
         {
             try
             {
-                _vehicleService.Delete(id);
+                await _vehicleService.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Erorr on the deleting vehicle");
             }
         }
     }

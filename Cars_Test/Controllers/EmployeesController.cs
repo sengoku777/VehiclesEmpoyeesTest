@@ -25,7 +25,7 @@ namespace Cars_Test.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error on the get collection employees");
             }
         }
 
@@ -39,21 +39,21 @@ namespace Cars_Test.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error on the get employee");
             }
         }
 
         [HttpPost]
-        public IActionResult AddEmployee([FromBody] AddEmployeeDTO addEmployeeDTO)
+        public async Task<IActionResult> AddEmployee([FromBody] AddEmployeeDTO addEmployeeDTO)
         {
             try
             {
-                var createdEmployee = _employeeService.Add(addEmployeeDTO);
-                return createdEmployee == null ? throw new ApplicationException("Error added employee to database") : Ok(createdEmployee);
+                var addedEmployee = await _employeeService.AddAsync(addEmployeeDTO);
+                return addedEmployee == null ? throw new ApplicationException("Error added employee to database") : Ok(addedEmployee);
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error on the adding employee");
             }
         }
 
@@ -67,23 +67,9 @@ namespace Cars_Test.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error on the adding vehicle to the employee");
             }
         }
-
-        //[HttpPost("AddVehicleCollection")]
-        //public async Task<IActionResult> AddVehicleCollection([FromBody] IEnumerable<int> addVehicleIdsDTO, int employeeId)
-        //{
-        //    try
-        //    {
-        //        var employee = await _employeeService.AddVehicleAnEmployee(addVehicleIdsDTO, employeeId);
-        //        return employee == null ? throw new ApplicationException("Error added vehicle for employee to database") : Ok(employee);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return BadRequest("Internal Server error");
-        //    }
-        //}
 
         [HttpPut]
         public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
@@ -95,7 +81,7 @@ namespace Cars_Test.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error on the updating employee");
             }
         }
 
@@ -109,7 +95,7 @@ namespace Cars_Test.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Internal Server error");
+                return BadRequest("Error on the deleting employee");
             }
         }
 

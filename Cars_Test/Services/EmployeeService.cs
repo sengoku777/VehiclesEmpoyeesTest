@@ -57,10 +57,10 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="employeeDto">Модель представление сотрудника</param>
         /// <returns></returns>
-        public EmployeeDTO? Add(AddEmployeeDTO employeeDto)
+        public async Task<EmployeeDTO?> AddAsync(AddEmployeeDTO employeeDto)
         {
             var originalEmployee = _mapper.Map<Employee>(employeeDto);
-            var newEmployee = _employeeRepository.Add(originalEmployee);
+            var newEmployee = await _employeeRepository.AddAsync(originalEmployee);
             return _mapper.Map<EmployeeDTO>(newEmployee);
         }
 
@@ -79,7 +79,7 @@ namespace Cars_Test.Services
             _mapper.Map(updatedEmployeeDto, employee);
 
             // Обновляем данные в БД
-            var updatedEmployee = _employeeRepository.Update(employee);
+            var updatedEmployee = await _employeeRepository.UpdateAsync(employee);
 
             // Метод добавления транспорта к сотруднику
             await LinkVehicleAsync(updatedEmployeeDto.VehicleIds, updatedEmployee);
@@ -106,7 +106,7 @@ namespace Cars_Test.Services
                 if(vehicle != null)
                 {
                     vehicle.EmployeeId = addedEmployee.Id;
-                    _vehicleRepository.Update(vehicle);
+                    await _vehicleRepository.UpdateAsync(vehicle);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Cars_Test.Services
             var employee = await _employeeRepository.GetIdAsync(employeeId)
                 ?? throw new Exception("Employee doesn't exist");
 
-            _employeeRepository.Delete(t => t.Id == employee.Id);
+            await _employeeRepository.DeleteAsync(t => t.Id == employee.Id);
 
             return _mapper.Map<DeleteEmployeeDTO>(employee);
         }
@@ -147,7 +147,7 @@ namespace Cars_Test.Services
                 ?? throw new Exception("Vehicle doesn't exist");
 
             existedVehicle.EmployeeId = vehicle.EmployeeId;
-            _vehicleRepository.Update(existedVehicle);
+            await _vehicleRepository.UpdateAsync(existedVehicle);
 
             return _mapper.Map<EmployeeDTO>(employee);
         }

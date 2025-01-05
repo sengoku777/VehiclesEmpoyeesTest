@@ -67,10 +67,10 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="vehicle">Модель представления транспорта</param>
         /// <returns></returns>
-        public VehicleDTO Add(AddVehicleDTO vehicle) 
+        public async Task<VehicleDTO?> AddAsync(AddVehicleDTO vehicle) 
         { 
             var mappedVehicle = _mapper.Map<Vehicle>(vehicle);
-            var newVehicle = _vehicleRepository.Add(mappedVehicle);
+            var newVehicle = await _vehicleRepository.AddAsync(mappedVehicle);
             return _mapper.Map<VehicleDTO>(newVehicle);
         }
 
@@ -79,10 +79,10 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="vehicle">Модель представления транспорта</param>
         /// <returns></returns>
-        public VehicleDTO Update(UpdateVehicleDTO vehicle)
+        public async Task<VehicleDTO?> UpdateAsync(UpdateVehicleDTO vehicle)
         {
             var mappedVehicle = _mapper.Map<Vehicle>(vehicle);
-            var updatedVehicle = _vehicleRepository.Update(mappedVehicle);
+            var updatedVehicle = await _vehicleRepository.UpdateAsync(mappedVehicle);
             return _mapper.Map<VehicleDTO>(updatedVehicle);
         }
 
@@ -90,9 +90,9 @@ namespace Cars_Test.Services
         /// Метод удаления транспорта
         /// </summary>
         /// <param name="id">ID транспорта</param>
-        public void Delete(int id) 
+        public async Task DeleteAsync(int id) 
         {
-            _vehicleRepository.Delete(t => t.Id == id);
+            await _vehicleRepository.DeleteAsync(t => t.Id == id);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Cars_Test.Services
         /// <param name="numberPlate">Номер</param>
         /// <param name="employeeId">ID сотрудника</param>
         /// <returns></returns>
-        public bool CheckNumberPlate(string numberPlate, int employeeId) 
+        public async Task<bool> CheckNumberPlateAsync(string numberPlate, int employeeId) 
         {
             // Находим транспорт по его номерному знаку
             var vehicle = _vehicleRepository.Get(t => t.NumberPlate == numberPlate);
@@ -111,7 +111,7 @@ namespace Cars_Test.Services
                 return false;
 
             // Ищем подходящего владельца по полю EmployeeId
-            var employee = _employeeRepository.GetIdAsync(employeeId);
+            var employee = await _employeeRepository.GetIdAsync(employeeId);
 
             // Если владелец существует возвращаем true, иначе false
             return employee != null;
