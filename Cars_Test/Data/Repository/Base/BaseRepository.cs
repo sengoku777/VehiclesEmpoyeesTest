@@ -24,6 +24,7 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Get all collection on the DB");
                 return Collection.AsNoTracking().ToList();
             }
             catch (NullReferenceException e)
@@ -37,6 +38,7 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Get collection expression on the DB");
                 return Collection.AsNoTracking()
                     .FirstOrDefault(expression);
             }
@@ -51,7 +53,9 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Added new entity to the DB");
                 var result = Collection.Add(entity);
+                _logger.LogInformation("Save changes async");
                 await _context.SaveChangesAsync();
                 return result.Entity;
             }
@@ -66,7 +70,9 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Added range entity to the DB");
                 Collection.AddRange(entity);
+                _logger.LogInformation("Save changes async");
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
@@ -80,7 +86,9 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Updating entity on the DB");
                 entity = Collection.Update(entity).Entity;
+                _logger.LogInformation("Save changes async");
                 await _context.SaveChangesAsync();
                 return entity;
             }
@@ -95,8 +103,10 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Deliting entity on the DB");
                 var entities = Find(predicator);
                 Collection.RemoveRange(entities);
+                _logger.LogInformation("Save changes async");
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
@@ -110,6 +120,7 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Finding collection expression on the DB");
                 return Collection.AsNoTracking().Where(predicator);
             }
             catch (Exception e)
@@ -123,6 +134,7 @@ namespace Cars_Test.Data.Repository.Base
         {
             try
             {
+                _logger.LogInformation("Where collection expression on the DB");
                 return Collection.AsNoTracking().Where(predicate);
             }
             catch (Exception e)
