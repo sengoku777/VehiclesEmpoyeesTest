@@ -71,20 +71,6 @@ namespace Cars_Test.Controllers
             }
         }
 
-        //[HttpPost("AddVehicleCollection")]
-        //public async Task<IActionResult> AddVehicleCollection([FromBody] IEnumerable<int> addVehicleIdsDTO, int employeeId)
-        //{
-        //    try
-        //    {
-        //        var employee = await _employeeService.AddVehicleAnEmployee(addVehicleIdsDTO, employeeId);
-        //        return employee == null ? throw new ApplicationException("Error added vehicle for employee to database") : Ok(employee);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return BadRequest("Internal Server error");
-        //    }
-        //}
-
         [HttpPut]
         public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
         {

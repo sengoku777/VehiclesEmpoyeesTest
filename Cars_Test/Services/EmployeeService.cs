@@ -37,7 +37,10 @@ namespace Cars_Test.Services
         /// <returns></returns>
         public IEnumerable<EmployeeDTO> GetAll()
         {
+            _logger.LogInformation("Get employees collection");
             var allEmployees = _employeeRepository.All();
+            
+            _logger.LogInformation("Mapping and return collection type IEnumerable<EmployeeDTO>");
             return _mapper.Map<IEnumerable<EmployeeDTO>>(allEmployees);
         }
 
@@ -48,7 +51,10 @@ namespace Cars_Test.Services
         /// <returns></returns>
         public async Task<EmployeeDTO?> GetByIdAsync(int employeeId)
         {
+            _logger.LogInformation($"Get employee by ID - {employeeId}");
             var employeeById = await _employeeRepository.GetIdAsync(employeeId);
+
+            _logger.LogInformation("Mapping and return object type EmployeeDTO");
             return _mapper.Map<EmployeeDTO>(employeeById) ?? null;
         }
 
@@ -59,8 +65,14 @@ namespace Cars_Test.Services
         /// <returns></returns>
         public async Task<EmployeeDTO?> AddAsync(AddEmployeeDTO employeeDto)
         {
+            _logger.LogInformation("Add employee");
+            _logger.LogInformation("Mapping AddEmployeeDTO to Employee");
             var originalEmployee = _mapper.Map<Employee>(employeeDto);
+
+            _logger.LogInformation("Added employee to repository and return the added employee");
             var newEmployee = await _employeeRepository.AddAsync(originalEmployee);
+
+            _logger.LogInformation("Mapping Employee to AddEmployeeDTO");
             return _mapper.Map<EmployeeDTO>(newEmployee);
         }
 
@@ -72,18 +84,26 @@ namespace Cars_Test.Services
         /// <exception cref="Exception"></exception>
         public async Task<EmployeeDTO?> UpdateAsync(UpdateEmployeeDTO updatedEmployeeDto)
         {
+            _logger.LogInformation($"Updating employee - {updatedEmployeeDto}");
+
             var employee = await _employeeRepository.GetIdAsync(updatedEmployeeDto.Id)
                 ?? throw new Exception("Employee doesn't exist");
 
+            _logger.LogInformation($"Getting employee on the repository, employeeId - {employee.Id}");
+
             // Делаем маппинг модель типа UpdateEmployeeDTO в Employee
+            _logger.LogInformation("Mapping UpdateEmployeeDTO to Employee");
             _mapper.Map(updatedEmployeeDto, employee);
 
             // Обновляем данные в БД
+            _logger.LogInformation($"Updating employee on the repository");
             var updatedEmployee = await _employeeRepository.UpdateAsync(employee);
 
             // Метод добавления транспорта к сотруднику
+            _logger.LogInformation($"Linked updated vehicle employee on the repository");
             await LinkVehicleAsync(updatedEmployeeDto.VehicleIds, updatedEmployee);
 
+            _logger.LogInformation("Mapping Employee to EmployeeDTO");
             return _mapper.Map<EmployeeDTO>(employee);
         }
 
@@ -119,11 +139,15 @@ namespace Cars_Test.Services
         /// <exception cref="Exception"></exception>
         public async Task<DeleteEmployeeDTO> DeleteAsync(int employeeId)
         {
+            _logger.LogInformation($"Delete employee, employeeId - {employeeId}");
+
             var employee = await _employeeRepository.GetIdAsync(employeeId)
                 ?? throw new Exception("Employee doesn't exist");
 
+            _logger.LogInformation($"Delete employee on the repository");
             await _employeeRepository.DeleteAsync(t => t.Id == employee.Id);
 
+            _logger.LogInformation("Mapping Employee to DeleteEmployeeDTO");
             return _mapper.Map<DeleteEmployeeDTO>(employee);
         }
 
@@ -135,6 +159,8 @@ namespace Cars_Test.Services
         /// <exception cref="Exception"></exception>
         public async Task<EmployeeDTO?> AddVehicleAnEmployee(AddVehicleAnEmployeeDTO vehicle)
         {
+            _logger.LogInformation($"Add vehicle to employee, employeeId - {vehicle.EmployeeId}, vehicleId - {vehicle.VehicleId}");
+
             if (vehicle == null) 
             { 
                 throw new Exception("Vehicle is a null"); 
@@ -147,37 +173,11 @@ namespace Cars_Test.Services
                 ?? throw new Exception("Vehicle doesn't exist");
 
             existedVehicle.EmployeeId = vehicle.EmployeeId;
+            _logger.LogInformation("Add vehicle to employee on the repository");
             await _vehicleRepository.UpdateAsync(existedVehicle);
 
+            _logger.LogInformation("Mapping Employee to EmployeeDTO");
             return _mapper.Map<EmployeeDTO>(employee);
         }
-
-
-        //public async Task<IEnumerable<VehicleDTO>> AddVehicleAnEmployee(IEnumerable<int> vehicleIds, int employeeId)
-        //{
-        //    if (vehicleIds == null || vehicleIds?.Count() == 0) { throw new Exception("Vehicle is a null or empty"); }
-
-        //    var employee = await _employeeRepository.GetIdAsync(employeeId) ?? throw new Exception("Employee doesn't exist");
-
-        //    var addedCars = new List<VehicleDTO>();
-
-        //    foreach (var id in vehicleIds)
-        //    {
-        //        var existedVehicle = await _vehicleRepository.GetIdAsync(id);
-
-        //        if (existedVehicle == null)
-        //        {
-        //            var mappedVehicle = _mapper.Map<Vehicle>(existedVehicle);
-        //            var newVehicle = _vehicleRepository.Add(mappedVehicle);
-        //            addedCars.Add(_mapper.Map<VehicleDTO>(newVehicle));
-        //            continue;
-        //        }
-
-        //        existedVehicle.EmployeeId = employeeId;
-        //        _vehicleRepository.Update(existedVehicle);
-        //    }
-
-        //    return addedCars;
-        //}
     }
 }

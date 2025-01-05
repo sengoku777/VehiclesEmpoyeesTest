@@ -10,12 +10,10 @@ namespace Cars_Test.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IVehicleService _vehicleService;
-        private readonly IMapper _mapper;
 
-        public VehiclesController(IVehicleService vehicleService, IMapper mapper)
+        public VehiclesController(IVehicleService vehicleService)
         {
             _vehicleService = vehicleService;
-            _mapper = mapper;
         }
 
         [HttpGet("checkNumberPlate/{numberPlate}/employee/{employeeId}")]

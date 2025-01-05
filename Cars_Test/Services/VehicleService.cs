@@ -35,9 +35,12 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="vehicleId">ID транспорта</param>
         /// <returns></returns>
-        public async Task<VehicleDTO> GetByIdAsync(int vehicleId) 
+        public async Task<VehicleDTO?> GetByIdAsync(int vehicleId) 
         {
+            _logger.LogInformation($"Get vehicle by id, vehicleId - {vehicleId}");
             var vehicle = await _vehicleRepository.GetIdAsync(vehicleId);
+
+            _logger.LogInformation("Return mapping object Vehicle to VehicleDTO");
             return _mapper.Map<VehicleDTO>(vehicle);
         }
 
@@ -47,7 +50,10 @@ namespace Cars_Test.Services
         /// <returns></returns>
         public IEnumerable<VehicleDTO> GetAll()
         {
+            _logger.LogInformation("Getting collection vehicle on the repository");
             var vehicle = _vehicleRepository.All();
+
+            _logger.LogInformation("Return mapping object IEnumerable<Vehicle> to IEnumerable<VehicleDTO>");
             return _mapper.Map<IEnumerable<VehicleDTO>>(vehicle);
         }
 
@@ -56,9 +62,13 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="employeeId">ID сотрудника</param>
         /// <returns></returns>
-        public IEnumerable<VehicleDTO> GetByEmployeeId(int employeeId) 
+        public IEnumerable<VehicleDTO> GetByEmployeeId(int employeeId)
         {
+            _logger.LogInformation($"Getting collection vehicle on the employeeId, employeeId - {employeeId}");
+
             var vehicles = _vehicleRepository.GetByEmployeeId(employeeId);
+
+            _logger.LogInformation("Return mapping object IEnumerable<Vehicle> to IEnumerable<VehicleDTO>");
             return _mapper.Map<IEnumerable<VehicleDTO>>(vehicles);
         }
 
@@ -67,10 +77,14 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="vehicle">Модель представления транспорта</param>
         /// <returns></returns>
-        public async Task<VehicleDTO?> AddAsync(AddVehicleDTO vehicle) 
-        { 
+        public async Task<VehicleDTO?> AddAsync(AddVehicleDTO vehicle)
+        {
+            _logger.LogInformation("Adding new vehicle to the repository");
             var mappedVehicle = _mapper.Map<Vehicle>(vehicle);
             var newVehicle = await _vehicleRepository.AddAsync(mappedVehicle);
+
+            _logger.LogInformation($"The new vehicle, vehicleId - {newVehicle.Id}, numberPlate - {newVehicle.NumberPlate}");
+            _logger.LogInformation("Return mapping object Vehicle to VehicleDTO");
             return _mapper.Map<VehicleDTO>(newVehicle);
         }
 
@@ -79,8 +93,13 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="vehicle">Модель представления транспорта</param>
         /// <returns></returns>
+        public async Task<VehicleDTO?> UpdateAsync(UpdateVehicleDTO vehicle)
         {
+            _logger.LogInformation($"Update vehicle on the repository, vehicleId - {vehicle.Id}");
             var mappedVehicle = _mapper.Map<Vehicle>(vehicle);
+            var updatedVehicle = await _vehicleRepository.UpdateAsync(mappedVehicle);
+            _logger.LogInformation($"New updated vehicle, vehicleId - {updatedVehicle.Id}, numberPlate - {updatedVehicle.NumberPlate}");
+            _logger.LogInformation("Return mapping object Vehicle to VehicleDTO");
             return _mapper.Map<VehicleDTO>(updatedVehicle);
         }
 
@@ -88,8 +107,9 @@ namespace Cars_Test.Services
         /// Метод удаления транспорта
         /// </summary>
         /// <param name="id">ID транспорта</param>
-        public async Task DeleteAsync(int id) 
+        public async Task DeleteAsync(int id)
         {
+            _logger.LogInformation($"Deleting vehicle on the id - {id}");
             await _vehicleRepository.DeleteAsync(t => t.Id == id);
         }
 
@@ -99,15 +119,22 @@ namespace Cars_Test.Services
         /// <param name="numberPlate">Номер</param>
         /// <param name="employeeId">ID сотрудника</param>
         /// <returns></returns>
-        public async Task<bool> CheckNumberPlateAsync(string numberPlate, int employeeId) 
+        public async Task<bool> CheckNumberPlateAsync(string numberPlate, int employeeId)
         {
+            _logger.LogInformation($"Checking number plate, numberPlate - {numberPlate}, employeeId - {employeeId}");
+
             // Находим транспорт по его номерному знаку
             var vehicle = _vehicleRepository.Get(t => t.NumberPlate == numberPlate);
 
+            _logger.LogInformation($"Getting vehicle by the numberPlate, vehicleId - {vehicle?.Id}");
             // Если такого транспорта нету или привязанный владелец не подходящий
             if (vehicle == null || vehicle.EmployeeId != employeeId)
+            {
+                _logger.LogInformation($"Getted vehicle is a null");
                 return false;
+            }
 
+            _logger.LogInformation($"Getted employee on the vehicle");
             // Ищем подходящего владельца по полю EmployeeId
             var employee = await _employeeRepository.GetIdAsync(employeeId);
 
