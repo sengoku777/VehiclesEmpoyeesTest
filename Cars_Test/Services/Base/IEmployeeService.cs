@@ -9,6 +9,7 @@ namespace Cars_Test.Services.Base
         Task<EmployeeDTO?> GetByIdAsync(int employeeId);
         Task<EmployeeDTO?> AddAsync(AddEmployeeDTO employeeDto);
         Task<EmployeeDTO?> UpdateAsync(UpdateEmployeeDTO updatedEmployeeDto);
+        //Task<IEnumerable<VehicleDTO>?> AddVehicleAnEmployee(IEnumerable<int> vehicleIds, int employeeId);
         Task<EmployeeDTO?> AddVehicleAnEmployee(AddVehicleAnEmployeeDTO vehicle);
         Task<DeleteEmployeeDTO> DeleteAsync(int employeeId);
     }

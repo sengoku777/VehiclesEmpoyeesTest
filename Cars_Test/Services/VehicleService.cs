@@ -79,10 +79,8 @@ namespace Cars_Test.Services
         /// </summary>
         /// <param name="vehicle">Модель представления транспорта</param>
         /// <returns></returns>
-        public async Task<VehicleDTO?> UpdateAsync(UpdateVehicleDTO vehicle)
         {
             var mappedVehicle = _mapper.Map<Vehicle>(vehicle);
-            var updatedVehicle = await _vehicleRepository.UpdateAsync(mappedVehicle);
             return _mapper.Map<VehicleDTO>(updatedVehicle);
         }
 

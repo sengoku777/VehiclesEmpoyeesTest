@@ -151,5 +151,33 @@ namespace Cars_Test.Services
 
             return _mapper.Map<EmployeeDTO>(employee);
         }
+
+
+        //public async Task<IEnumerable<VehicleDTO>> AddVehicleAnEmployee(IEnumerable<int> vehicleIds, int employeeId)
+        //{
+        //    if (vehicleIds == null || vehicleIds?.Count() == 0) { throw new Exception("Vehicle is a null or empty"); }
+
+        //    var employee = await _employeeRepository.GetIdAsync(employeeId) ?? throw new Exception("Employee doesn't exist");
+
+        //    var addedCars = new List<VehicleDTO>();
+
+        //    foreach (var id in vehicleIds)
+        //    {
+        //        var existedVehicle = await _vehicleRepository.GetIdAsync(id);
+
+        //        if (existedVehicle == null)
+        //        {
+        //            var mappedVehicle = _mapper.Map<Vehicle>(existedVehicle);
+        //            var newVehicle = _vehicleRepository.Add(mappedVehicle);
+        //            addedCars.Add(_mapper.Map<VehicleDTO>(newVehicle));
+        //            continue;
+        //        }
+
+        //        existedVehicle.EmployeeId = employeeId;
+        //        _vehicleRepository.Update(existedVehicle);
+        //    }
+
+        //    return addedCars;
+        //}
     }
 }

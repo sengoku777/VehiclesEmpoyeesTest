@@ -1,4 +1,5 @@
-﻿using Cars_Test.DTO;
+﻿using Cars_Test.Data.Entities;
+using Cars_Test.DTO;
 using Cars_Test.DTO.Vehicle;
 
 namespace Cars_Test.Services.Base
